@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wedding of Malik & Annisa - Anime Edition</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <!-- Fonts: Fredoka One (Header Anime), Mali (Handwriting/Dialogue), Kosugi Maru (Round Japanese feel) -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600;700&family=Kosugi+Maru&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'anime-bg': '#FFF5F8',      // Pink sangat muda
+                        'anime-pink': '#FF7EB3',    // Pink Sakura
+                        'anime-blue': '#7AF0F5',    // Biru Langit Anime
+                        'anime-yellow': '#FFDD59',  // Kuning Cerah
+                        'anime-purple': '#B388FF',  // Ungu Pastel
+                        'anime-dark': '#4A2B2B',    // Coklat Gelap (untuk outline)
+                    },
+                    fontFamily: {
+                        'header': ['"Fredoka One"', 'cursive'],
+                        'body': ['"Mali"', 'cursive'],
+                        'jp': ['"Kosugi Maru"', 'sans-serif'],
+                        'arabic': ['"Amiri"', 'serif'],
+                    },
+                    boxShadow: {
+                        // Shadow tajam ala pop art / komik
+                        'comic': '4px 4px 0px #4A2B2B',
+                        'comic-hover': '6px 6px 0px #4A2B2B',
+                        'comic-sm': '2px 2px 0px #4A2B2B',
+                    },
+                    backgroundImage: {
+                        'dots': 'radial-gradient(#FF7EB3 1px, transparent 1px)',
+                        'stripes': 'repeating-linear-gradient(45deg, #FFF5F8, #FFF5F8 10px, #FFF0F5 10px, #FFF0F5 20px)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- GLOBAL --- */
+        body {
+            background-color: #FFF5F8;
+            background-image: radial-gradient(#FF7EB3 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+            color: #4A2B2B;
+            font-family: 'Mali', cursive;
+            overflow-x: hidden;
+        }
+
+        body.modal-open { overflow: hidden; height: 100vh; position: fixed; width: 100%; }
+
+        /* --- MANGA PANEL STYLE --- */
+        .manga-panel {
+            background: white;
+            border: 3px solid #4A2B2B;
+            border-radius: 20px;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        
+        .manga-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.15);
+        }
+
+        /* --- SAKURA FALLING ANIMATION --- */
+        .sakura {
+            position: absolute;
+            background-color: #FFC0CB;
+            border-radius: 100% 0 100% 0;
+            opacity: 0.8;
+            animation: fall-sakura 10s linear infinite;
+        }
+
+        @keyframes fall-sakura {
+            0% { transform: translate(0, -10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translate(100px, 110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* --- SPEED LINES (Background Effect) --- */
+        .speed-lines {
+            background: repeating-conic-gradient(
+                from 0deg,
+                rgba(255, 255, 255, 0.4) 0deg 10deg,
+                transparent 10deg 20deg
+            );
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.5;
+            animation: spin-slow 20s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- BOUNCY BUTTON --- */
+        .btn-anime {
+            background: #FF7EB3;
+            color: white;
+            border: 3px solid #4A2B2B;
+            border-radius: 50px;
+            box-shadow: 4px 4px 0px #4A2B2B;
+            transition: all 0.1s;
+            text-transform: uppercase;
+            font-family: 'Fredoka One', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .btn-anime:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px #4A2B2B;
+        }
+
+        /* --- SPEECH BUBBLE --- */
+        .speech-bubble {
+            background: white;
+            border: 2px solid #4A2B2B;
+            border-radius: 15px;
+            padding: 10px;
+            position: relative;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: #4A2B2B transparent transparent transparent;
+        }
+        .speech-bubble::before {
+             content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px 6px 0;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+            z-index: 1;
+        }
+
+        /* --- OPENING CURTAIN --- */
+        #opening-overlay {
+            transition: transform 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045); /* Dramatic exit */
+        }
+        .is-open { transform: translateY(-120%) rotate(-5deg); }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #FFF5F8; }
+        ::-webkit-scrollbar-thumb { background: #FF7EB3; border-radius: 5px; border: 2px solid #FFF5F8; }
+    </style>
+</head>
+<body class="modal-open">
+
+    <!-- AUDIO -->
+    <audio id="bg-music" loop preload="auto">
+        <!-- Upbeat cute anime style music -->
+        <source src="https://files.catbox.moe/1skpmc.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- SAKURA CONTAINER -->
+    <div id="sakura-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <!-- === OPENING COVER (Manga Cover Style) === -->
+    <div id="opening-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white border-8 border-anime-pink overflow-hidden">
+        
+        <!-- Speed Lines Background -->
+        <div class="speed-lines opacity-20"></div>
+
+        <div class="relative z-10 text-center p-6 w-11/12 max-w-md">
+            
+            <!-- Logo Header -->
+            <div class="mb-8 transform -rotate-3">
+                <div class="bg-anime-pink text-white text-xs px-4 py-1 inline-block border-2 border-anime-dark rounded-full shadow-comic-sm font-bold mb-2">NEW CHAPTER!</div>
+                <h1 class="font-header text-6xl text-anime-blue drop-shadow-[3px_3px_0px_#4A2B2B] leading-none" style="-webkit-text-stroke: 2px #4A2B2B;">Malik <br>& Annisa</h1>
+            </div>
+
+            <!-- Chibi Illustration Area -->
+            <div class="w-64 h-64 mx-auto mb-8 relative group cursor-pointer">
+                <!-- Background Circle -->
+                <div class="absolute inset-0 bg-anime-yellow rounded-full border-4 border-anime-dark shadow-comic group-hover:scale-105 transition-transform"></div>
+                
+                <!-- Couple Image -->
+                <div class="absolute inset-2 rounded-full overflow-hidden border-2 border-white bg-white">
+                    <img src="https://img.freepik.com/premium-photo/chibi-cartoon-muslim-wedding-couple-ai-generated-image_316488-7875.jpg" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Floating Hearts -->
+                <div class="absolute -top-4 -right-2 text-4xl animate-bounce">💖</div>
+                <div class="absolute bottom-0 -left-4 text-4xl animate-bounce" style="animation-delay: 0.5s">✨</div>
+            </div>
+
+            <p class="font-body text-anime-dark text-lg mb-8 font-bold">"We are starting our new adventure!"</p>
+
+            <button onclick="openInvitation()" class="btn-anime py-4 px-12 text-xl w-full flex items-center justify-center gap-3 group">
+                <span>Start</span> <span class="group-hover:translate-x-1 transition-transform">▶</span>
+            </button>
+        </div>
+
+        <!-- Footer Credits -->
+        <div class="absolute bottom-4 w-full text-center">
+            <p class="text-xs font-bold text-gray-400 font-jp">Created by Malikfaza Studio • 2026</p>
+        </div>
+    </div>
+
+    <!-- === MAIN CONTENT === -->
+    <main id="main-content" class="relative w-full opacity-0 transition-opacity duration-1000">
+        
+        <!-- Music Toggle -->
+        <button onclick="toggleMusic()" class="fixed top-4 right-4 z-[60] btn-anime w-12 h-12 flex items-center justify-center !rounded-full !p-0 hover:scale-110">
+            <svg id="icon-music" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="animate-spin"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+        </button>
+
+        <!-- HERO SECTION (Intro Panel) -->
+        <section class="min-h-screen flex flex-col items-center justify-center relative px-4 py-20 overflow-hidden">
+            
+            <div class="manga-panel p-8 w-full max-w-2xl text-center bg-white transform rotate-1 border-4">
+                <div class="absolute -top-3 -left-3 bg-anime-blue border-2 border-anime-dark px-3 py-1 font-bold text-xs shadow-comic-sm text-white">EPISODE 1</div>
+                
+                <h2 class="font-header text-4xl md:text-5xl text-anime-pink mb-2 mt-4" style="-webkit-text-stroke: 1.5px #4A2B2B; text-shadow: 3px 3px 0px #FFF;">THE WEDDING</h2>
+                <div class="w-full h-1 bg-anime-dark rounded-full mb-6"></div>
+
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8 mb-6">
+                    <!-- Groom Character -->
+                    <div class="flex flex-col items-center" data-aos="fade-right">
+                        <div class="w-24 h-24 rounded-full border-4 border-anime-dark overflow-hidden bg-anime-blue mb-2 shadow-comic-sm">
+                            <img src="https://img.freepik.com/premium-vector/premium-highquality-cartoon-design-part-11_768745-426.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <div class="bg-anime-dark text-white px-3 py-1 text-xs font-bold rounded-full -mt-4 z-10">Malik-kun</div>
+                    </div>
+                    
+                    <div class="text-4xl font-header text-anime-dark animate-pulse">VS</div> <!-- Just joking, it's & -->
+
+                    <!-- Bride Character -->
+                    <div class="flex flex-col items-center" data-aos="fade-left">
+                        <div class="w-24 h-24 rounded-full border-4 border-anime-dark overflow-hidden bg-anime-pink mb-2 shadow-comic-sm">
+                            <img src="https://img.freepik.com/premium-vector/chibi-cute-kawaii-character-cartoon-illustration-teacher-muslim-hijab-girl-holding-book_161819-762.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <div class="bg-anime-dark text-white px-3 py-1 text-xs font-bold rounded-full -mt-4 z-10">Annisa-chan</div>
+                    </div>
+                </div>
+
+                <div class="bg-anime-yellow/30 border-2 border-dashed border-anime-dark p-4 rounded-xl mb-6">
+                    <p class="font-bold text-lg">📅 Selasa, 10 Maret 2026</p>
+                </div>
+
+                <!-- Countdown -->
+                <div id="countdown" class="grid grid-cols-4 gap-2" data-aos="zoom-in"></div>
+            </div>
+        </section>
+
+        <!-- COUPLE PROFILE (Character Stats) -->
+        <section class="py-10 px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Quote Bubble -->
+                <div class="flex justify-center mb-12" data-aos="fade-up">
+                    <div class="speech-bubble bg-white max-w-lg text-center transform -rotate-1">
+                        <p class="text-sm font-bold text-gray-500 mb-1">QS. Ar-Rum: 21</p>
+                        <p class="font-arabic text-xl mt-2 leading-relaxed">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا...</p>
+                        <p class="text-xs mt-2 italic font-bold">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri..."</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Groom Card -->
+                    <div class="manga-panel p-0 group" data-aos="fade-right">
+                        <div class="bg-anime-blue h-24 border-b-3 border-anime-dark relative overflow-hidden">
+                             <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/diag-stripes-light.png')]"></div>
+                        </div>
+                        <div class="px-6 pb-6 text-center -mt-12 relative z-10">
+                            <img src="https://img.freepik.com/premium-vector/premium-highquality-cartoon-design-part-11_768745-426.jpg" class="w-24 h-24 rounded-full border-4 border-white shadow-comic mx-auto mb-3 object-cover bg-white">
+                            <h3 class="font-header text-2xl">Malik Faza</h3>
+                            <span class="bg-anime-blue text-xs font-bold px-2 py-0.5 border border-anime-dark rounded-md">GROOM</span>
+                            <p class="text-sm mt-3 font-bold text-gray-500">Putra Bpk. Umar & Ibu Nunung</p>
+                            
+                            <!-- Fun Stats -->
+                            <div class="mt-4 text-left space-y-2 text-xs font-bold bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-16">Handsome</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden border border-anime-dark"><div class="h-full bg-anime-blue w-[90%]"></div></div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-16">Patience</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden border border-anime-dark"><div class="h-full bg-anime-blue w-[85%]"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bride Card -->
+                    <div class="manga-panel p-0 group" data-aos="fade-left">
+                        <div class="bg-anime-pink h-24 border-b-3 border-anime-dark relative overflow-hidden">
+                             <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/diag-stripes-light.png')]"></div>
+                        </div>
+                        <div class="px-6 pb-6 text-center -mt-12 relative z-10">
+                            <img src="https://img.freepik.com/premium-vector/chibi-cute-kawaii-character-cartoon-illustration-teacher-muslim-hijab-girl-holding-book_161819-762.jpg" class="w-24 h-24 rounded-full border-4 border-white shadow-comic mx-auto mb-3 object-cover bg-white">
+                            <h3 class="font-header text-2xl">Annisa Sholiha</h3>
+                             <span class="bg-anime-pink text-xs font-bold px-2 py-0.5 border border-anime-dark rounded-md text-white">BRIDE</span>
+                            <p class="text-sm mt-3 font-bold text-gray-500">Putri Bpk. Husain & Ibu Saadah</p>
+
+                             <!-- Fun Stats -->
+                             <div class="mt-4 text-left space-y-2 text-xs font-bold bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-16">Cuteness</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden border border-anime-dark"><div class="h-full bg-anime-pink w-[99%]"></div></div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-16">Cooking</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden border border-anime-dark"><div class="h-full bg-anime-pink w-[88%]"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE (Story Arc) -->
+        <section class="py-10 px-4">
+             <div class="max-w-3xl mx-auto">
+                 <div class="text-center mb-8 relative">
+                     <h2 class="font-header text-4xl text-anime-purple" style="-webkit-text-stroke: 1px #4A2B2B;">EVENT SCHEDULE</h2>
+                     <div class="absolute -top-6 right-10 text-4xl animate-spin-slow">🌸</div>
+                 </div>
+
+                 <div class="space-y-6">
+                     <!-- Akad Item -->
+                     <div class="manga-panel p-4 flex flex-col md:flex-row gap-4 items-center hover:-translate-y-1 transition-transform border-l-8 border-l-anime-yellow" data-aos="fade-up">
+                         <div class="bg-anime-yellow w-16 h-16 rounded-xl border-2 border-anime-dark flex items-center justify-center text-3xl shadow-comic-sm shrink-0">
+                             💍
+                         </div>
+                         <div class="flex-1 text-center md:text-left">
+                             <h3 class="font-header text-xl">Akad Nikah</h3>
+                             <p class="text-sm font-bold text-gray-500">08:00 WIB - Selesai</p>
+                             <p class="text-xs mt-1">📍 Kediaman Mempelai Wanita (Ds. Kertasari)</p>
+                         </div>
+                         <a href="https://goo.gl/maps/placeholder" class="btn-anime text-xs py-2 px-4 shadow-comic-sm rounded-xl">Map 🗺️</a>
+                     </div>
+
+                     <!-- Resepsi Item -->
+                     <div class="manga-panel p-4 flex flex-col md:flex-row gap-4 items-center hover:-translate-y-1 transition-transform border-l-8 border-l-anime-pink" data-aos="fade-up" data-aos-delay="100">
+                         <div class="bg-anime-pink w-16 h-16 rounded-xl border-2 border-anime-dark flex items-center justify-center text-3xl shadow-comic-sm shrink-0">
+                             🎉
+                         </div>
+                         <div class="flex-1 text-center md:text-left">
+                             <h3 class="font-header text-xl">Resepsi</h3>
+                             <p class="text-sm font-bold text-gray-500">11:00 WIB - Selesai</p>
+                             <p class="text-xs mt-1">📍 Kediaman Mempelai Wanita (Ds. Kertasari)</p>
+                         </div>
+                         <a href="https://goo.gl/maps/placeholder" class="btn-anime text-xs py-2 px-4 shadow-comic-sm rounded-xl">Map 🗺️</a>
+                     </div>
+                 </div>
+             </div>
+        </section>
+
+        <!-- GALLERY (Comic Strip) -->
+        <section class="py-10 px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="font-header text-4xl text-center text-anime-blue mb-8" style="-webkit-text-stroke: 1px #4A2B2B;">GALLERY</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2 p-2 bg-anime-dark rounded-lg shadow-comic">
+                    <div class="col-span-2 row-span-2 relative border-2 border-white overflow-hidden group">
+                        <img src="https://img.freepik.com/premium-photo/chibi-cartoon-muslim-wedding-couple-ai-generated-image_316488-7875.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-2 right-2 bg-white px-2 border border-black text-xs font-bold">PIC 01</div>
+                    </div>
+                    <div class="col-span-1 row-span-1 relative border-2 border-white overflow-hidden group">
+                         <img src="https://img.freepik.com/premium-vector/premium-highquality-cartoon-design-part-11_768745-426.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="col-span-1 row-span-1 relative border-2 border-white overflow-hidden group">
+                         <img src="https://img.freepik.com/premium-vector/chibi-cute-kawaii-character-cartoon-illustration-teacher-muslim-hijab-girl-holding-book_161819-762.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                     <div class="col-span-2 md:col-span-3 h-32 relative border-2 border-white overflow-hidden group">
+                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIlsvIfyQEaNKKKWC2AMZZgPSCVNhroVJ5Ag&s" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                         <div class="absolute top-2 left-2 bg-white px-2 border border-black text-xs font-bold">SWEET MOMENTS</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GIFT & RSVP (Quest Board) -->
+        <section class="py-10 px-4 mb-20">
+            <div class="max-w-3xl mx-auto space-y-12">
+                
+                <!-- Loot Box (Gift) -->
+                <div class="text-center" data-aos="fade-up">
+                    <h2 class="font-header text-3xl mb-6">SEND LOVE ❤️</h2>
+                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                        <div class="manga-panel p-4 flex items-center gap-4 bg-[#118EEA]/10">
+                            <div class="font-bold text-lg text-[#118EEA]">DANA</div>
+                            <div class="text-left">
+                                <p class="font-mono font-bold">0851 6114 1114</p>
+                                <p class="text-[10px] uppercase font-bold text-gray-500">Malik Faza</p>
+                            </div>
+                            <button onclick="copyToClipboard('085161141114', 'DANA')" class="ml-auto text-xs bg-[#118EEA] text-white px-3 py-1 rounded border border-black shadow-comic-sm hover:translate-y-0.5 hover:shadow-none transition-all">COPY</button>
+                        </div>
+                         <div class="manga-panel p-4 flex items-center gap-4 bg-[#FF5500]/10">
+                            <div class="font-bold text-lg text-[#FF5500]">SeaBank</div>
+                             <div class="text-left">
+                                <p class="font-mono font-bold">9016 4283 9446</p>
+                                <p class="text-[10px] uppercase font-bold text-gray-500">Annisa Sholiha</p>
+                            </div>
+                            <button onclick="copyToClipboard('901642839446', 'SeaBank')" class="ml-auto text-xs bg-[#FF5500] text-white px-3 py-1 rounded border border-black shadow-comic-sm hover:translate-y-0.5 hover:shadow-none transition-all">COPY</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission Board (RSVP) -->
+                <div class="manga-panel p-6 bg-anime-yellow/20 border-4" data-aos="zoom-in">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-anime-dark text-white px-4 py-1 rounded-full font-header text-lg border-2 border-white shadow-md">MISSION BOARD</div>
+                    
+                    <h3 class="text-center font-bold mt-4 mb-2">Confirm Your Attendance!</h3>
+                    <p class="text-center text-xs mb-6 text-gray-600">Complete this quest to join the party.</p>
+
+                    <form id="rsvp-form" onsubmit="sendToWhatsApp(event)" class="space-y-4">
+                        <input type="text" id="name" placeholder="Your Name (Character Name)" required class="w-full border-2 border-anime-dark rounded-lg px-4 py-2 outline-none focus:bg-anime-pink/10 font-bold placeholder-gray-400">
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <select id="status" class="w-full border-2 border-anime-dark rounded-lg px-4 py-2 outline-none font-bold bg-white">
+                                <option value="Hadir">Accept Quest</option>
+                                <option value="Berhalangan">Decline Quest</option>
+                                <option value="Ragu">Pending...</option>
+                            </select>
+                            <select id="pax" class="w-full border-2 border-anime-dark rounded-lg px-4 py-2 outline-none font-bold bg-white">
+                                <option value="1">1 Player</option>
+                                <option value="2">2 Players</option>
+                            </select>
+                        </div>
+                        
+                        <textarea id="message" rows="2" placeholder="Leave a message for the couple..." required class="w-full border-2 border-anime-dark rounded-lg px-4 py-2 outline-none focus:bg-anime-pink/10 font-bold placeholder-gray-400 resize-none"></textarea>
+                        
+                        <button type="submit" class="btn-anime w-full py-3 shadow-comic hover:brightness-110">COMPLETE MISSION ✅</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-anime-dark text-white py-8 text-center border-t-4 border-anime-pink relative overflow-hidden">
+             <div class="absolute top-0 left-0 w-full h-1 bg-white opacity-20"></div>
+             <h2 class="font-header text-2xl mb-2 text-anime-pink">ARIGATOU GOZAIMASU!</h2>
+             <p class="text-sm opacity-80 mb-6">See you at the wedding!</p>
+             <p class="text-xs font-bold font-jp">Design by <a href="https://wa.me/6285161141114?text=Halo%20saya%20mau%20pesan%20undangan%20Anime" target="_blank" class="text-anime-blue hover:underline">Malikfaza Studio</a></p>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // --- SAKURA GENERATOR ---
+        function createSakura() {
+            const container = document.getElementById('sakura-container');
+            const petalCount = 15;
+            
+            for(let i=0; i<petalCount; i++) {
+                setTimeout(() => {
+                    const petal = document.createElement('div');
+                    petal.classList.add('sakura');
+                    
+                    // Random properties
+                    const size = Math.random() * 10 + 10 + 'px';
+                    petal.style.width = size;
+                    petal.style.height = size;
+                    petal.style.left = Math.random() * 100 + '%';
+                    petal.style.animationDuration = Math.random() * 5 + 5 + 's';
+                    petal.style.animationDelay = Math.random() * 5 + 's';
+                    
+                    container.appendChild(petal);
+                }, i * 500);
+            }
+        }
+
+        // --- OPENING ---
+        function openInvitation() {
+            const overlay = document.getElementById('opening-overlay');
+            const main = document.getElementById('main-content');
+            const audio = document.getElementById('bg-music');
+
+            if(audio) {
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log("Audio autoplay prevented"));
+            }
+
+            overlay.classList.add('is-open'); 
+            
+            setTimeout(() => {
+                document.body.classList.remove('modal-open');
+                main.classList.remove('opacity-0');
+                
+                setTimeout(() => { overlay.style.display = 'none'; }, 1000);
+
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                    offset: 50
+                });
+            }, 600); 
+        }
+
+        // --- MUSIC TOGGLE ---
+        function toggleMusic() {
+            const audio = document.getElementById('bg-music');
+            const icon = document.getElementById('icon-music');
+            if(audio.paused) {
+                audio.play();
+                icon.classList.add('animate-spin');
+                icon.style.opacity = '1';
+            } else {
+                audio.pause();
+                icon.classList.remove('animate-spin');
+                icon.style.opacity = '0.5';
+            }
+        }
+
+        // --- COUNTDOWN (Pixel Art Style Box) ---
+        function initCountdown() {
+            const target = new Date("2026-03-10T08:00:00+07:00").getTime();
+            const el = document.getElementById('countdown');
+            
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = target - now;
+
+                if (diff < 0) {
+                    el.innerHTML = "<div class='col-span-4 font-header text-xl text-anime-pink'>EVENT STARTED!</div>";
+                    return;
+                }
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const boxClass = "bg-white border-2 border-anime-dark rounded-lg p-2 shadow-comic-sm flex flex-col items-center";
+                const numClass = "font-header text-2xl text-anime-dark leading-none";
+                const labelClass = "text-[10px] font-bold text-gray-400";
+
+                el.innerHTML = `
+                    <div class="${boxClass}"><span class="${numClass}">${d}</span><span class="${labelClass}">DAYS</span></div>
+                    <div class="${boxClass}"><span class="${numClass}">${h}</span><span class="${labelClass}">HRS</span></div>
+                    <div class="${boxClass}"><span class="${numClass}">${m}</span><span class="${labelClass}">MIN</span></div>
+                    <div class="${boxClass} bg-anime-pink/10"><span class="${numClass} text-anime-pink">${s}</span><span class="${labelClass} text-anime-pink">SEC</span></div>
+                `;
+            }, 1000);
+        }
+
+        // --- WHATSAPP (FIXED) ---
+        function sendToWhatsApp(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const status = document.getElementById('status').value;
+            const pax = document.getElementById('pax').value;
+            const msg = document.getElementById('message').value;
+
+            const phone = "6285161141114";
+            
+            // Encode message components securely
+            const text = encodeURIComponent(`*Mission Report (Anime Wedding)* 🎌\n\nCharacter: ${name}\nStatus: ${status}\nParty Size: ${pax}\n\n"${msg}"\n\nSee you there!`);
+            
+            // Open in new tab
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+        }
+
+        // --- COPY FUNCTION ---
+        function copyToClipboard(text, label) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Copied!',
+                        text: `${label} number acquired!`,
+                        background: '#FFF5F8',
+                        confirmButtonColor: '#FF7EB3',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+            } catch (err) {
+                 Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: 'Manual copy required',
+                    confirmButtonColor: '#FF7EB3'
+                });
+            }
+            document.body.removeChild(textArea);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCountdown();
+            createSakura();
+        });
+    </script>
+</body>
+</html>
